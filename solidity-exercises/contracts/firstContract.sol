@@ -3,11 +3,11 @@
 
 contract FirstContract {
 
-    function helloFunction()
+    function helloFunction(uint256 inputvar)
         public
         pure 
         returns (uint256) {
-            return 100;
+            return inputvar;
         }
 
     function otherFunction()
