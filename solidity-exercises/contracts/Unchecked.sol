@@ -10,10 +10,11 @@ contract Unchecked {
      
 
     function getNumber(uint256 x) public pure returns (uint256) { // Corrected syntax
+        unchecked{
             return x - 100;
+        }
         
     }
-
 
    
 }
