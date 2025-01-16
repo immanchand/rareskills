@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
 contract Fibonacci {
     /*
         This exercise assumes you understand what Fibonacci sequence is.
@@ -10,5 +13,15 @@ contract Fibonacci {
 
     function fibonacci(uint256 _position) public view returns (uint256) {
         // your code here
+        uint256 fibnum = 0;
+        uint256 fibnumback = 1;
+        uint256 temp;
+        for(uint256 i = 1; i <= _position ; i++){
+            
+            temp = fibnum;
+            fibnum = fibnum + fibnumback;
+            fibnumback = temp;
+        }
+        return fibnum;
     }
 }
