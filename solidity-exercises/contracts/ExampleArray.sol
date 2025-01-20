@@ -24,4 +24,10 @@ contract ExampleContract {
     function getEntireArray() public view returns (uint256[] memory) {
         return myArray;
     }
+
+    function popAndSwap(uint256 index) public {
+        myArray[index] = myArray[myArray.length - 1];
+        myArray.pop(); // reduces the length;
+       // myArray[index] = valueAtTheEnd;
+    }
 }
