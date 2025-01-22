@@ -15,10 +15,7 @@ contract NestedMapping {
         nestedBool[_addr][_num] = true;
     }
 
-    function returnNestedDetails(
-        address _addr,
-        uint256 _num
-    ) public view returns (bool) {
+    function returnNestedDetails(address _addr, uint256 _num) public view returns (bool) {
         // your code here
         return nestedBool[_addr][_num];
     }
