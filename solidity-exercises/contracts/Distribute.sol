@@ -17,7 +17,7 @@ contract Distribute {
         uint256 share = (address(this).balance)/count;
        
         for(uint256 i=0;i<addresses.length;i++){
-            addresses[0].call{value: share}("");
+            addresses[i].call{value: share}("");
         }
     }
 }
