@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
+import "@openzeppelin/contracts/utils/Strings.sol";
+
 contract SimpleNFT {
 
     mapping(uint256=>address) private owners;
@@ -29,7 +31,7 @@ contract SimpleNFT {
 
     function tokenURI(uint256 _tokenId) external pure returns (string memory){
         require(_tokenId<MAX_SUPPLY, "Token outside of MAX SUPPLY");
-        return string(abi.encodePacked(baseURI, _tokenId));
+        return string(abi.encodePacked(baseURI, Strings.toString(_tokenId)));
     }
 
 }
