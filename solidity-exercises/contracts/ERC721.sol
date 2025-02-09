@@ -6,8 +6,10 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 contract SimpleNFT {
 
     mapping(uint256=>address) private owners;
+    mapping(address => mapping(address => bool)) public operators;
     uint256 constant MAX_SUPPLY = 100;
     string constant baseURI = "https://example.com/images/";
+    
     
     function mint(uint256 _tokenId) external {
 
@@ -24,9 +26,10 @@ contract SimpleNFT {
     function transferFrom(address _from, address _to, uint256 _tokenId) external payable {
         require(owners[_tokenId]!=address(0), "Token does not exist");
         require(_from==owners[_tokenId], "The from address is not the owner of this token");
-        require(msg.sender==_from, "Only the owner can transfer their token");
+        require(msg.sender==_from || operators[_from][msg.sender], "You are not approved to transfer this token");
 
-        owners[_tokenId]=_to;
+        owners[_tokenId] = _to;
+        operators[_from][msg.sender] = false;
     }
 
     function tokenURI(uint256 _tokenId) external pure returns (string memory){
@@ -34,4 +37,8 @@ contract SimpleNFT {
         return string(abi.encodePacked(baseURI, Strings.toString(_tokenId)));
     }
 
+    function setApprovalForAll(address _operator, bool _approved) external{
+        require(msg.sender != _operator, "Owner and operator should not be the same");
+        operators[msg.sender][_operator] = _approved;
+    }
 }
