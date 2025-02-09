@@ -8,7 +8,7 @@ contract ICNFT is ERC721("IC ART COLLECTION","ICNFT"){
 
     uint256 public constant MAX_SUPPLY = 100;
     uint256 public constant ART_PRICE = 10000000 gwei;
-    address public immutable artist;
+    address immutable artist;
 
     constructor() {
         artist = msg.sender;
