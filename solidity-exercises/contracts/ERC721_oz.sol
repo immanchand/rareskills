@@ -16,7 +16,8 @@ contract ICNFT is Ownable(msg.sender), ERC721("IC ART COLLECTION","ICNFT"){
     }
 
     function withdraw() external onlyOwner {
-        msg.sender.call{value: address(this).balance}("");
+       // msg.sender.call{value: address(this).balance}("");
+       payable(msg.sender).transfer(address(this).balance);
     }
 
 }
