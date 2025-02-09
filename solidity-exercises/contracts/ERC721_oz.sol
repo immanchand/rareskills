@@ -8,10 +8,10 @@ contract ICNFT is ERC721("IC ART COLLECTION","ICNFT"){
 
     uint256 public constant MAX_SUPPLY = 100;
     uint256 public constant ART_PRICE = 10000000 gwei;
-    address public immutable contractOwner;
+    address public immutable artist;
 
     constructor() {
-        contractOwner = msg.sender;
+        artist = msg.sender;
     }
 
     function mint(uint256 _tokenId) external payable{
@@ -22,7 +22,7 @@ contract ICNFT is ERC721("IC ART COLLECTION","ICNFT"){
 
     function withdraw() external {
        // msg.sender.call{value: address(this).balance}("");
-       require(msg.sender==contractOwner,"Only the artist can withdraw");
+       require(msg.sender==artist,"Only the artist can withdraw");
        payable(msg.sender).transfer(address(this).balance);
     }
 
