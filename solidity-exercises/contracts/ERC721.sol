@@ -9,7 +9,7 @@ contract SimpleNFT {
     function mint(uint256 _tokenId) external {
 
         require(owners[_tokenId] == address(0), "Token already minted");
-        require(_tokenId <= MAX_SUPPLY );
+        require(_tokenId < MAX_SUPPLY, "Token outside of MAX SUPPLY" );
         owners[_tokenId] = msg.sender;
     }
 
