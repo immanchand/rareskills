@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 contract ICNFT is ERC721("IC ART COLLECTION","ICNFT"){
 
-    uint256 public constant MAX_SUPPLY = 5;
+    uint256 public constant MAX_SUPPLY = 100;
     uint256 public constant ART_PRICE = 10000000 gwei;
     address immutable artist;
 
@@ -25,5 +25,9 @@ contract ICNFT is ERC721("IC ART COLLECTION","ICNFT"){
        require(msg.sender==artist,"Only the artist can withdraw");
        payable(msg.sender).transfer(address(this).balance);
     }
-    
+
+    function _baseURI() internal pure override returns (string memory) {
+        return "ipfs://QmbN4pdHZDrvWomn7FH7RqgWX5RRGjADUBVG9zK3nsA1su/";
+    }
+
 }
