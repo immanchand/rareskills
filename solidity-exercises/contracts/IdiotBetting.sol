@@ -12,20 +12,23 @@ contract IdiotBettingGame {
         2. `claimPrize` function can only be called by the winner after the betting 
            period has ended. It transfers the entire balance of the contract to the winner.
     */
-    uint256 public lastDepositAmount;
+    uint256 public winningAmount;
     uint256 public endTime;
     address public winningAddress;
     
     function bet() public payable {
         // your code here
-        require(msg.value>lastDepositAmount, "Your bet is too low! Try again!");
+        //require(msg.value>lastDepositAmount, "Your bet is too low! Try again!");
         if(endTime==0)
-            endTime = (block.timestamp+1 minutes);
-        require(block.timestamp<endTime, "Sorry, your bet is too late. Winner can claim it!");
-
-        lastDepositAmount = msg.value;
-        winningAddress = msg.sender;
-        endTime = (block.timestamp+1 minutes);
+            endTime = (block.timestamp+60 minutes);
+        require(block.timestamp<=endTime, "Sorry, your bet is too late. Winner can claim it!");
+        
+        if(msg.value>winningAmount){
+            winningAmount = msg.value;
+            winningAddress = msg.sender;
+            endTime = (block.timestamp+60 minutes);
+        }
+        
     }
 
     function claimPrize() public {
@@ -34,8 +37,8 @@ contract IdiotBettingGame {
         require(block.timestamp>endTime, "The game isn't over yet. Keep betting to win!");
         require(msg.sender == winningAddress, "You are not the winner");
         endTime=0;
-        lastDepositAmount=0;
-        winningAddress=0x0000000000000000000000000000000000000000;
+        winningAmount=0;
+        winningAddress=address(0);
         msg.sender.call{value: address(this).balance}("");
     }
 }
