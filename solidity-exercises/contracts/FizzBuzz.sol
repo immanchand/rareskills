@@ -12,7 +12,7 @@ contract FizzBuzz {
         return "fizz";
         // if n is divisible by 5, return "buzz"
         if (n % 5 == 0)
-        return " buzz";
+        return "buzz";
         
         return "";
     }
