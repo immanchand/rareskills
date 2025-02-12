@@ -24,15 +24,15 @@ contract Stack {
         stack.push(newValue);
     }
     function peek() public view returns(uint256 lastElement){
-        if(stack.length > 0)
+        require(stack.length > 0, "The stack is empty");
         return stack[stack.length-1];
     }
     function pop() public returns(uint256 lastElement){
-        if(stack.length > 0){
+        require(stack.length > 0, "The stack is empty");
         lastElement = stack[stack.length-1];
         stack.pop();
         return lastElement;
-        }
+        
     }
     function size() public view returns(uint256 length){
         return stack.length;
