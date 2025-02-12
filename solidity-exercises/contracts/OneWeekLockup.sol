@@ -7,7 +7,6 @@ contract OneWeekLockup {
      * Users can also withdraw their ether (not more than their deposit) but should only be able to do a week after their last deposit
      * Consider edge cases by which users might utilize to deposit ether
      *
-
      * Required function
      * - depositEther()
      * - withdrawEther(uint256 )
