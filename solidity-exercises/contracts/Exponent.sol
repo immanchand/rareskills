@@ -10,7 +10,7 @@ contract Exponent{
 
     function getResult(uint256 _base, uint256 _e)
         public
-        view
+        pure
         returns (uint256)
     {
         //uint256 expResult = _base ** _e;
