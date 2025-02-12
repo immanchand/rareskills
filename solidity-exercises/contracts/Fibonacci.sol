@@ -11,7 +11,7 @@ contract Fibonacci {
         calling fibonacci(6) would return 8, because the 6th Fibonacci number is 8.
     */
 
-    function fibonacci(uint256 _position) public view returns (uint256) {
+    function fibonacci(uint256 _position) public pure returns (uint256) {
         // your code here
         uint256 fibnum = 0;
         uint256 fibnumback = 1;
