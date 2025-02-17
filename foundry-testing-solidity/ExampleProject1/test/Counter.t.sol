@@ -21,4 +21,5 @@ contract CounterTest is Test {
         counter.setNumber(x);
         assertEq(counter.number(), x, "expect to set the number to x");
     }
+
 }
