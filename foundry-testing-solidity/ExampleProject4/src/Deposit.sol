@@ -33,4 +33,16 @@ contract Deposit {
 		(bool ok, ) = msg.sender.call{value: 1 ether}("");
 		require(ok, "seller did not withdraw");
 	}
+
+	function buyerWithdraw() external {
+		uint256 _depositTime = depositTime[msg.sender];
+		require(_depositTime != 0, "sender did not deposit");
+		require(block.timestamp - _depositTime <= 3 days);
+
+		//emit BuyerRefunded(msg.sender, block.timestamp);
+
+		// this is the branch we are testing
+		(bool ok,) = msg.sender.call{value: 1 ether}("");
+		require(ok, "Failed to withdraw");
+	}
 }
