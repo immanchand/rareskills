@@ -4,6 +4,8 @@ pragma solidity ^0.8.13;
 contract Counter {
     uint256 public number;
 
+    event Deposited(address indexed);
+
     function setNumber(uint256 newNumber) public {
         number = newNumber;
     }
@@ -14,6 +16,6 @@ contract Counter {
 
     function buyerDeposit() external payable {
 		require(msg.value == 2 ether, "incorrect amount");
-		//emit Deposited(msg.sender);
+		emit Deposited(msg.sender);
 	}
 }
