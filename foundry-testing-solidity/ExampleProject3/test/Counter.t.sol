@@ -28,5 +28,13 @@ contract CounterTest is Test {
 	    uint256 balanceAfter = address(counter).balance;
 
 	    assertEq(balanceAfter - balanceBefore, 2 ether, "expect increase of 2 ether");
-}
+    }
+
+    function testBuyerDepositWrongPrice() public {
+	    vm.expectRevert("incorrect amount");
+	    counter.buyerDeposit{value: 2 ether + 1 wei}();
+
+	    vm.expectRevert("incorrect amount");
+	    counter.buyerDeposit{value: 2 ether - 1 wei}();
+    }
 }
