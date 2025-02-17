@@ -3,6 +3,9 @@ pragma solidity ^0.8.13;
 
 import {Test, console} from "forge-std/Test.sol";
 import {Deposit} from "../src/Deposit.sol";
+import "forge-std/console.sol";
+
+
 
 contract DepositTest is Test {
     Deposit public deposit;
@@ -154,6 +157,41 @@ contract DepositTest is Test {
         vm.stopPrank();
     }
 
+    function testInvalidSellerAddress(address notSeller) public {
+	    vm.assume(notSeller != SELLER);
+
+	    vm.expectRevert("not the seller");
+	    deposit.sellerWithdraw(notSeller);
+    }
+
+    function testBuyerWithdrawBefore3Days() public startAtPresentDay {
+        // This test checks that the seller is able to withdraw 3 days after the buyer deposits
+
+        // buyer deposits 1 ether
+        testBuyerDeposit();
+
+        // before three days the seller withdraws
+        vm.startPrank(buyer); // msg.sender == SELLER
+        vm.warp(1680616584 + 2 days);
+        //vm.expectRevert(); // expects a revert
+        deposit.buyerWithdraw();
+        assertEq(address(deposit).balance, 0 ether, "Contract balance did not decrease");
+    }
+
+    function testBuyerWithdrawAfter3Days() public startAtPresentDay {
+        // This test checks that the seller is able to withdraw 3 days after the buyer deposits
+
+        // buyer deposits 1 ether
+        testBuyerDeposit();
+
+        // before three days the seller withdraws
+        vm.startPrank(buyer); // msg.sender == SELLER
+        vm.warp(1680616584 + 3 days + 1 seconds);
+        vm.expectRevert(); // expects a revert
+        deposit.buyerWithdraw();
+        //assertEq(address(deposit).balance, 0 ether, "Contract balance did not decrease");
+    }
+
    /* function testRejectedWithdrawl() public startAtPresentDay {
         // This test checks that the entry for the buyer is deleted (this allows the buyer to buy again)
         
@@ -169,4 +207,10 @@ contract DepositTest is Test {
         faildeposit.sellerWithdraw(buyer);
         vm.stopPrank();
     }*/
+
+    receive() external payable {
+       // revert();
+    }
+
+    
 }
