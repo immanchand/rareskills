@@ -14,11 +14,11 @@ contract CounterTest is Test {
 
     function test_Increment() public {
         counter.increment();
-        assertEq(counter.number(), 1);
+        assertEq(counter.number(), 1, "expect the counter number to equal 1");
     }
 
     function testFuzz_SetNumber(uint256 x) public {
         counter.setNumber(x);
-        assertEq(counter.number(), x);
+        assertEq(counter.number(), x, "expect to set the number to x");
     }
 }
