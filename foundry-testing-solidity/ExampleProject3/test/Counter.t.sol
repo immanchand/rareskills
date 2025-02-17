@@ -6,6 +6,8 @@ import {Counter} from "../src/Counter.sol";
 
 contract CounterTest is Test {
     Counter public counter;
+    event Deposited(address indexed);
+    address buyer = address(0xBad);
 
     function setUp() public {
         counter = new Counter();
@@ -37,4 +39,14 @@ contract CounterTest is Test {
 	    vm.expectRevert("incorrect amount");
 	    counter.buyerDeposit{value: 2 ether - 1 wei}();
     }
+
+    function testBuyerDepositEvent() public {
+        vm.deal(address(buyer), 2 ether);
+        vm.expectEmit();
+        emit Deposited(buyer);
+        vm.prank(buyer);
+	    counter.buyerDeposit{value: 2 ether}();
+    }
+
+
 }
