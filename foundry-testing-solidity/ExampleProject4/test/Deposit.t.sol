@@ -5,22 +5,26 @@ import {Test, console} from "forge-std/Test.sol";
 import {Deposit} from "../src/Deposit.sol";
 import "forge-std/console.sol";
 
-
+contract RejectTransaction {
+    receive() external payable {
+        revert();
+    }
+}
 
 contract DepositTest is Test {
     Deposit public deposit;
     Deposit public faildeposit;
     address constant SELLER = address(0x5E11E7);
     //address constant Rejector = address(RejectTransaction);
-   // RejectTransaction private rejector;
+    RejectTransaction private rejector;
 
     event Deposited(address indexed);
     event SellerWithdraw(address indexed, uint256 indexed);
 
     function setUp() public {
         deposit = new Deposit(SELLER);
-        //rejector = new RejectTransaction();
-        //faildeposit = new Deposit(address(rejector));
+        rejector = new RejectTransaction();
+        faildeposit = new Deposit(address(rejector));
     }
 
     modifier startAtPresentDay() {
@@ -191,11 +195,34 @@ contract DepositTest is Test {
         deposit.buyerWithdraw();
         //assertEq(address(deposit).balance, 0 ether, "Contract balance did not decrease");
     }
+    function testBuyerFailWithdraw() public startAtPresentDay {
+        vm.deal(address(rejector), 1 ether);
+        vm.startPrank(address(rejector)); 
+        deposit.buyerDeposit{value: 1 ether}();
+        assertEq(address(deposit).balance, 1 ether, "Contract balance did not increase"); // checks to see if the contract balance increases
+        //vm.stopPrank();
 
-   /* function testRejectedWithdrawl() public startAtPresentDay {
+        // before three days the seller withdraws
+        //vm.startPrank(address(rejector)); // msg.sender == SELLER
+        vm.warp(1680616584 + 1 days);
+        vm.expectRevert(); // expects a revert
+        deposit.buyerWithdraw();
+        //assertEq(address(rejector).balance, 1 ether, "Reject Contract balance did not decrease");
+        vm.stopPrank();
+    }
+
+    function testBuyerWithdrawNoDeposit() public startAtPresentDay {
+
+        vm.startPrank(buyer); // msg.sender == SELLER
+        //vm.warp(1680616584 + 3 days + 1 seconds);
+        vm.expectRevert("sender did not deposit"); // expects a revert
+        deposit.buyerWithdraw();
+    }
+
+    function testRejectedSellerWithdrawl() public startAtPresentDay {
         // This test checks that the entry for the buyer is deleted (this allows the buyer to buy again)
         
-				vm.startPrank(buyer); // msg.sender == buyer
+		vm.startPrank(buyer); // msg.sender == buyer
         faildeposit.buyerDeposit{value: 1 ether}();
         vm.stopPrank();
         assertEq(address(faildeposit).balance, 1 ether, "assertion failed");
@@ -206,10 +233,10 @@ contract DepositTest is Test {
         vm.expectRevert();
         faildeposit.sellerWithdraw(buyer);
         vm.stopPrank();
-    }*/
+    }
 
     receive() external payable {
-       // revert();
+        //revert();
     }
 
     
