@@ -13,25 +13,58 @@ contract TestSigs1 is Test {
 
     address owner;
     uint256 privateKey =
-        0x1010101010101010101010101010101010101010101010101010101010101010;
+        0x1010101010101010101010101010101010101010101010101010101010101123;
 
     function setUp() public {
         owner = vm.addr(privateKey);
+        console.log(owner);
         verifier = new Verifier(owner);
     }
 
-    function testVerifyV1andV2() public view {
-        string memory message = "attack at dawn";
+    function constructSignatureElements() private view
+        returns(uint8 _v, bytes32 _r, bytes32 _s,string memory _message, bytes memory _signature) {
 
-        bytes32 msgHash = MessageHashUtils.toEthSignedMessageHash(keccak256(abi.encode(message)));
+            
+            string memory message = "stand down 123";
+            console.log(message);
 
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(privateKey, msgHash);
+            bytes32 msgHash = MessageHashUtils.toEthSignedMessageHash(keccak256(abi.encode(message)));
 
-        bytes memory signature = abi.encodePacked(r, s, v);
-        assertEq(signature.length, 65);
+            (uint8 v, bytes32 r, bytes32 s) = vm.sign(privateKey, msgHash);
 
-        console.logBytes(signature);
+            bytes memory signature = abi.encodePacked(r, s, v);
+            assertEq(signature.length, 65);
+
+            console.logBytes(signature);
+
+            return (v, r, s, message, signature);
+    }
+
+    function testVerifyV1() public view {
+        
+        (uint8 v, bytes32 r, bytes32 s,string memory message, ) = constructSignatureElements();
         verifier.verifyV1(message, r, s, v);
+    }
+
+    function testVerifyV2() public view {
+        
+       (, , , string memory message, bytes memory signature) = constructSignatureElements();
         verifier.verifyV2(message, signature);
     }
+
+    function testVerifyV1Fail() public {
+        
+        (uint8 v, bytes32 r, bytes32 s,string memory message, ) = constructSignatureElements();
+        vm.expectRevert();
+        verifier.verifyV1("different message", r, s, v);
+    }
+
+    function testVerifyV2Fail() public {
+        
+        (, , , string memory message, bytes memory signature) = constructSignatureElements();
+        vm.expectRevert();
+        verifier.verifyV2("different message", signature);
+    }
+    
 }
+
