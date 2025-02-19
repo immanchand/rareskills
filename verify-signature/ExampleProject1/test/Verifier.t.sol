@@ -20,7 +20,7 @@ contract TestSigs1 is Test {
         verifier = new Verifier(owner);
     }
 
-    function testVerifyV1andV2() public {
+    function testVerifyV1andV2() public view {
         string memory message = "attack at dawn";
 
         bytes32 msgHash = MessageHashUtils.toEthSignedMessageHash(keccak256(abi.encode(message)));
@@ -35,4 +35,3 @@ contract TestSigs1 is Test {
         verifier.verifyV2(message, signature);
     }
 }
-
