@@ -13,17 +13,9 @@ contract Verifier {
         verifyingAddress = _verifyingAddress;
     }
 
-    function verifyV1(
-        string calldata message,
-        bytes32 r,
-        bytes32 s,
-        uint8 v
-    ) public view {
+    function verifyV1(string calldata message, bytes32 r, bytes32 s, uint8 v) public view {
 
-      //  bytes32 signedMessageHash = keccak256(abi.encode(message))
-         //   .toEthSignedMessageHash();
-
-        bytes32 signedMessageHash = MessageHashUtils.toEthSignedMessageHash(keccak256(abi.encode(message)));
+         bytes32 signedMessageHash = MessageHashUtils.toEthSignedMessageHash(keccak256(abi.encode(message)));
 
         require(
             signedMessageHash.recover(v, r, s) == verifyingAddress,
@@ -31,10 +23,7 @@ contract Verifier {
         );
     }
 
-    function verifyV2(
-        string calldata message,
-        bytes calldata signature
-    ) public view {
+    function verifyV2(string calldata message, bytes calldata signature) public view {
         
         bytes32 signedMessageHash = MessageHashUtils.toEthSignedMessageHash(keccak256(abi.encode(message)));
 
