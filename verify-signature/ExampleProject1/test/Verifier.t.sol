@@ -54,17 +54,16 @@ contract TestSigs1 is Test {
 
     function testVerifyV1Fail() public {
         
-        (uint8 v, bytes32 r, bytes32 s,string memory message, ) = constructSignatureElements();
+        (uint8 v, bytes32 r, bytes32 s, , ) = constructSignatureElements();
         vm.expectRevert();
         verifier.verifyV1("different message", r, s, v);
     }
 
     function testVerifyV2Fail() public {
         
-        (, , , string memory message, bytes memory signature) = constructSignatureElements();
+        (, , , , bytes memory signature) = constructSignatureElements();
         vm.expectRevert();
         verifier.verifyV2("different message", signature);
     }
     
 }
-
